@@ -1,0 +1,10 @@
+{
+  "name": "Culture Amp Ruby Package Release Workflow",
+  "description": "Workflow template for audit, build, test, and releasing of internal ruby gems",
+  "categories": [
+    "Ruby"
+  ],
+  "filePatterns": [
+    ".*\\.gemspec$"
+  ]
+}
