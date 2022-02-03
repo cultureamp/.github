@@ -1,0 +1,7 @@
+{
+  "name": "Culture Amp CDK Infrastructure Checks",
+  "description": "Workflow template for executing checks on infrastructure codebases via yarn. It supports the CA packages repo and uses caching appropriately.",
+  "categories": [
+    "Typescript"
+  ]
+}

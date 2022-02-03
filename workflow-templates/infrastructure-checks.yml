@@ -1,0 +1,31 @@
+name: infra
+
+#
+# This workflow encapsulates running "yarn" scripts in parallel against a
+# sub-directory, using the Culture Amp package repository and caching
+# node_modules. It is typically useful for linting workflows on AWS CDK code.
+#
+# Adopting this workflow:
+#
+# 1. change the references to `ops` in the `push` paths below and in
+#    `workingDirectory` to point to the correct sub-directory in your repo
+# 2. if necessary, change the scripts executed by uncommenting the
+#    `parallelScriptsJson` argument and specifying a different set of scripts to
+#    run.
+
+on:
+  push:
+    paths:
+      - "ops/**"
+      - ".github/**"
+
+jobs:
+  auto:
+    uses: cultureamp/sre-workflows/.github/workflows/cdk-auto.yaml@v1
+    with:
+      workingDirectory: ops
+      # JSON array encoded as a string, default shown below, uncomment and add/change scripts if necessary
+      #parallelScriptsJson: '["build","prettier","eslint"]'
+    secrets:
+      # this is an organization-level secret: leave this as-is.
+      PACKAGE_REGISTRY_ACCESS_TOKEN: ${{ secrets.PACKAGE_REGISTRY_ACCESS_TOKEN }}
