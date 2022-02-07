@@ -1,0 +1,4 @@
+{
+  "name": "Sync production-support",
+  "description": "Keep a protected production-support branch in sync with the default branch, to facilitate preprod deploys (which are permitted from the default and production-support branches only)"
+}
