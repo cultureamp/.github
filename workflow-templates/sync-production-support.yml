@@ -1,0 +1,23 @@
+name: Sync production-support
+
+# This workflow keeps the production-support branch in sync with the default branch, to
+# facilitate easier preprod deploys (which are permitted from the default and
+# production-support branches only).
+
+on:
+  # Auto sync on every successful status
+  status:
+  # Force sync daily at 6am AEST (cron below using UTC time)
+  schedule:
+    - cron: "0 20 * * *"
+  # Force sync on demand via manual dispatch in Actions UI
+  workflow_dispatch:
+
+jobs:
+  sync:
+    uses: cultureamp/sre-workflows/.github/workflows/sync-protected-branch.yaml@v1
+    with:
+      branch: production-support
+      from_branch: $default-branch
+    secrets:
+      token: ${{ secrets.PRODUCTION_SUPPORT_BRANCH_GITHUB_TOKEN }}
