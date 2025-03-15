@@ -1,85 +1,85 @@
-name: Culture Amp Ruby Package Release
+# name: Culture Amp Ruby Package Release
 
-on: push
+# on: push
 
-jobs:
-  audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.0
-          bundler-cache: true
-      - name: Run bundle audit
-        run: script/audit
+# jobs:
+#   audit:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Set up Ruby
+#         uses: ruby/setup-ruby@v1
+#         with:
+#           ruby-version: 3.0
+#           bundler-cache: true
+#       - name: Run bundle audit
+#         run: script/audit
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.0
-          bundler-cache: true
-      - name: Run linter
-        run: script/lint
+#   lint:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Set up Ruby
+#         uses: ruby/setup-ruby@v1
+#         with:
+#           ruby-version: 3.0
+#           bundler-cache: true
+#       - name: Run linter
+#         run: script/lint
 
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby:
-          - "3.0"
-          - "2.7"
-          - "2.6"
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-      - name: Run tests
-        run: script/test
+#   test:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         ruby:
+#           - "3.0"
+#           - "2.7"
+#           - "2.6"
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Set up Ruby
+#         uses: ruby/setup-ruby@v1
+#         with:
+#           ruby-version: ${{ matrix.ruby }}
+#           bundler-cache: true
+#       - name: Run tests
+#         run: script/test
 
-  release:
-    if: github.ref == 'refs/heads/main'
-    needs: [audit, lint, test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Get changed files using defaults
-        id: changed-files
-        uses: tj-actions/changed-files@v11.7
-      - name: Set up Ruby
-        if: contains(steps.changed-files.outputs.modified_files, 'version.rb')
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.0
-      - name: Release gem
-        id: release-gem
-        if: contains(steps.changed-files.outputs.modified_files, 'version.rb')
-        run: script/ci_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OWNER: cultureamp
-      - name: Bump version and push tag
-        id: tag_version
-        if: contains(steps.changed-files.outputs.modified_files, 'version.rb')
-        uses: mathieudutour/github-tag-action@v6.0
-        with:
-          custom_tag: ${{ steps.release-gem.outputs.gem_version }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create a GitHub release
-        uses: ncipollo/release-action@v1
-        if: contains(steps.changed-files.outputs.modified_files, 'version.rb')
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+#   release:
+#     if: github.ref == 'refs/heads/main'
+#     needs: [audit, lint, test]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#         with:
+#           fetch-depth: 0
+#       - name: Get changed files using defaults
+#         id: changed-files
+#         uses: tj-actions/changed-files@v11.7
+#       - name: Set up Ruby
+#         if: contains(steps.changed-files.outputs.modified_files, 'version.rb')
+#         uses: ruby/setup-ruby@v1
+#         with:
+#           ruby-version: 3.0
+#       - name: Release gem
+#         id: release-gem
+#         if: contains(steps.changed-files.outputs.modified_files, 'version.rb')
+#         run: script/ci_release
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#           OWNER: cultureamp
+#       - name: Bump version and push tag
+#         id: tag_version
+#         if: contains(steps.changed-files.outputs.modified_files, 'version.rb')
+#         uses: mathieudutour/github-tag-action@v6.0
+#         with:
+#           custom_tag: ${{ steps.release-gem.outputs.gem_version }}
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Create a GitHub release
+#         uses: ncipollo/release-action@v1
+#         if: contains(steps.changed-files.outputs.modified_files, 'version.rb')
+#         with:
+#           tag: ${{ steps.tag_version.outputs.new_tag }}
+#           name: Release ${{ steps.tag_version.outputs.new_tag }}
+#           body: ${{ steps.tag_version.outputs.changelog }}
